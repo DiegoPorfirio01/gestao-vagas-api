@@ -43,8 +43,8 @@ public class CompanyEntity {
     @NotBlank(message = "Website é obrigatório")
     private String website;
 
-    @Length(min = 8, max = 20, message = "Senha deve ter entre 6 e 20 caracteres")
-    @NotBlank(message = "Senha é obrigatório")
+    @Length(min = 8, message = "A senha deve ter pelo menos 8 caracteres")
+    @NotBlank(message = "A senha é obrigatória")
     private String password;
 
     private String description;

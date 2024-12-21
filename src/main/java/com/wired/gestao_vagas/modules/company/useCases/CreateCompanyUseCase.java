@@ -9,11 +9,15 @@ import com.wired.gestao_vagas.modules.company.entities.CompanyEntity;
 import com.wired.gestao_vagas.modules.company.repositories.CompanyRepository;
 import com.wired.gestao_vagas.utils.StringUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 public class CreateCompanyUseCase {
     @Autowired
     private CompanyRepository companyRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @ResponseStatus(HttpStatus.CREATED)
     public void execute(CompanyEntity company) {
@@ -28,6 +32,13 @@ public class CreateCompanyUseCase {
                 .ifPresent(user -> {
                     throw new AlreadyExistsException("Email já está em uso");
                 });
+
+        var encodedPassword = this.passwordEncoder.encode(company.getPassword());
+
+        System.out.println("DEBUG: " + encodedPassword);
+        company.setPassword(encodedPassword);
+
+        System.out.println("DEBUG: " + company.getPassword());
 
         this.companyRepository.save(company);
     }
