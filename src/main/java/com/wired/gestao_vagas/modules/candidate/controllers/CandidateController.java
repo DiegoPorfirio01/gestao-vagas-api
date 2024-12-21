@@ -1,7 +1,6 @@
 package com.wired.gestao_vagas.modules.candidate.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 
@@ -16,11 +15,12 @@ import com.wired.gestao_vagas.exceptions.AlreadyExistsException;
 import com.wired.gestao_vagas.modules.candidate.entities.CandidateEntity;
 import com.wired.gestao_vagas.modules.candidate.useCases.CreateCandidateUseCase;
 import com.wired.gestao_vagas.modules.candidate.useCases.GetCandidatesUseCase;
+import com.wired.gestao_vagas.modules.candidate.useCases.GetPerfilCandidateUseCase;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/candidates")
 public class CandidateController {
 
     @Autowired
@@ -29,12 +29,23 @@ public class CandidateController {
     @Autowired
     private GetCandidatesUseCase getCandidatesUseCase;
 
-    @GetMapping()
+    @Autowired
+    private GetPerfilCandidateUseCase getPerfilCandidateUseCase;
+
+    @GetMapping("/candidate")
+    public ResponseEntity<CandidateEntity> getCurrentPerfilCandidate(HttpServletRequest request) {
+
+        String candidateId = request.getHeader("candidate_id");
+
+        return ResponseEntity.ok().body(getPerfilCandidateUseCase.execute(candidateId));
+    }
+
+    @GetMapping("/candidates")
     public ResponseEntity<List<CandidateEntity>> getCandidates() {
         return ResponseEntity.ok().body(getCandidatesUseCase.execute());
     }
 
-    @PostMapping()
+    @PostMapping("/candidates")
     public ResponseEntity<Object> createCandidate(@Valid @RequestBody CandidateEntity candidate) {
         try {
             this.createCandidateUseCase.execute(candidate);
