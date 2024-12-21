@@ -12,8 +12,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -44,7 +42,7 @@ public class CandidateEntity {
     @Column(unique = true)
     private String email;
 
-    @Length(min = 8, max = 20, message = "Senha deve ter entre 6 e 20 caracteres")
+    @Length(min = 8, message = "Senha deve ter pelo menos 8 caracteres")
     @NotBlank(message = "Senha é obrigatório")
     private String password;
     private String description;
