@@ -28,17 +28,15 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> {
                     auth
-                            .requestMatchers(HttpMethod.POST, "/companies").permitAll()
                             .requestMatchers(HttpMethod.POST, "/companies/auth").permitAll()
                             .requestMatchers(HttpMethod.POST, "/candidates/auth").permitAll()
                             .requestMatchers(HttpMethod.POST, "/candidates").permitAll()
-                            .requestMatchers(HttpMethod.GET, "/jobs").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/companies").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/companies").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/companies/jobs").permitAll()
                             .anyRequest().authenticated();
-                })
-                .addFilterBefore(securityFilterCompany, BasicAuthenticationFilter.class)
-                .securityMatcher("/companies/**")
-                .addFilterBefore(securityFilterCandidate, BasicAuthenticationFilter.class)
-                .securityMatcher("/candidates/**");
+                }).addFilterBefore(securityFilterCompany, BasicAuthenticationFilter.class)
+                .addFilterBefore(securityFilterCandidate, BasicAuthenticationFilter.class);
 
         return http.build();
     }

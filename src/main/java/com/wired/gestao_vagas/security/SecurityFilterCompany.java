@@ -29,26 +29,28 @@ public class SecurityFilterCompany extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain)
             throws ServletException, IOException {
-        SecurityContextHolder.getContext().setAuthentication(null);
-        String header = request.getHeader("Authorization");
 
-        if (header != null) {
-            var token = header.replace("Bearer ", "");
-            System.out.println("token23123132: " + token);
+        // Verifica se a requisição é para um endpoint de company
+        if (request.getRequestURI().startsWith("/companies")) {
+            SecurityContextHolder.getContext().setAuthentication(null);
+            String header = request.getHeader("Authorization");
 
-            var subjectToken = this.jwtProvider.validateToken(token, "company");
-            System.out.println("subjectToken: " + subjectToken);
+            if (header != null) {
+                var token = header.replace("Bearer ", "");
 
-            if (subjectToken == null || subjectToken.isEmpty()) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
+                var subjectToken = this.jwtProvider.validateToken(token, "company");
+
+                if (subjectToken == null || subjectToken.isEmpty()) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    return;
+                }
+
+                request.setAttribute("company_id", subjectToken);
+
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(subjectToken, null,
+                        Collections.emptyList());
+                SecurityContextHolder.getContext().setAuthentication(auth);
             }
-
-            request.setAttribute("company_id", subjectToken);
-
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(subjectToken, null,
-                    Collections.emptyList());
-            SecurityContextHolder.getContext().setAuthentication(auth);
         }
 
         filterChain.doFilter(request, response);

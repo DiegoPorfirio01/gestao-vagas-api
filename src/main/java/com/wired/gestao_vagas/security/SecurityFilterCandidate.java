@@ -29,25 +29,30 @@ public class SecurityFilterCandidate extends OncePerRequestFilter {
             @NonNull HttpServletResponse response,
             @NonNull FilterChain filterChain)
             throws ServletException, IOException {
-        SecurityContextHolder.getContext().setAuthentication(null);
-        String header = request.getHeader("Authorization");
 
-        if (header != null) {
-            var token = header.replace("Bearer ", "");
+        // Verifica se a requisição é para um endpoint de candidate
+        if (request.getRequestURI().startsWith("/candidates")) {
+            SecurityContextHolder.getContext().setAuthentication(null);
+            String header = request.getHeader("Authorization");
 
-            var subjectToken = this.jwtProvider.validateToken(token, "candidate");
-            System.out.println("subjectToken: " + subjectToken);
+            if (header != null) {
+                var token = header.replace("Bearer ", "");
 
-            if (subjectToken == null || subjectToken.isEmpty()) {
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
+                var subjectToken = this.jwtProvider.validateToken(token, "candidate");
+
+                if (subjectToken == null || subjectToken.isEmpty()) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    return;
+                }
+
+                request.setAttribute("candidate_id", subjectToken);
+
+                // var roles = token.getClaim("role");
+
+                UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(subjectToken, null,
+                        Collections.emptyList());
+                SecurityContextHolder.getContext().setAuthentication(auth);
             }
-
-            request.setAttribute("candidate_id", subjectToken);
-
-            UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(subjectToken, null,
-                    Collections.emptyList());
-            SecurityContextHolder.getContext().setAuthentication(auth);
         }
 
         filterChain.doFilter(request, response);

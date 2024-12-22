@@ -16,13 +16,13 @@ import com.wired.gestao_vagas.modules.company.dtos.AuthCompanyResponse;
 import com.wired.gestao_vagas.modules.company.useCases.AuthCompanyUseCase;
 
 @RestController
-@RequestMapping("/companies")
+@RequestMapping("/companies/auth")
 public class AuthCompanyController {
 
     @Autowired
     private AuthCompanyUseCase authCompanyUseCase;
 
-    @PostMapping("/auth")
+    @PostMapping()
     public ResponseEntity<Object> auth(@RequestBody AuthCompanyDTO data) {
         try {
             AuthCompanyResponse authCompanyResponse = authCompanyUseCase.execute(data);
