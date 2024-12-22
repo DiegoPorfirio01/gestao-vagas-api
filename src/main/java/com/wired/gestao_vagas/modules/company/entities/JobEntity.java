@@ -42,8 +42,8 @@ public class JobEntity {
     @Digits(integer = 10, fraction = 2, message = "O salário deve ter no máximo 10 dígitos inteiros e 2 decimais")
     private BigDecimal salary;
 
-    @Column(name = "active", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
-    private Boolean active;
+    @Builder.Default
+    private Boolean active = true;
 
     @ManyToOne()
     @JoinColumn(name = "company_id", insertable = false, updatable = false)
