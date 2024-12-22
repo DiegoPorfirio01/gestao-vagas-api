@@ -29,6 +29,7 @@ public class CompanyController {
     @Autowired
     private GetCompaniesUseCase getCompaniesUseCase;
 
+    // Public
     @GetMapping
     public List<CompanyPublicDTO> getCompanies() {
         return this.getCompaniesUseCase.execute()
@@ -37,6 +38,7 @@ public class CompanyController {
                 .toList();
     }
 
+    // Public
     @PostMapping
     public ResponseEntity<Object> createCompany(@Valid @RequestBody CompanyEntity company) {
         try {

@@ -28,6 +28,7 @@ public class JobController {
     @Autowired
     private GetJobsUseCase getJobsUseCase;
 
+    // Private (Create a job from current company)
     @PostMapping("/companies/jobs")
     public ResponseEntity<Object> create(@Valid @RequestBody CreateJobDTO job, HttpServletRequest request) {
         String companyId = request.getAttribute("company_id").toString();
@@ -46,6 +47,7 @@ public class JobController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
+    // Public (List all jobs from all companies)
     @GetMapping("/companies/jobs")
     public ResponseEntity<Object> list() {
         return ResponseEntity.ok(this.getJobsUseCase.execute());
