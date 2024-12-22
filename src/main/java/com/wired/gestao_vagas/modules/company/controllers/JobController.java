@@ -20,7 +20,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/jobs")
+@RequestMapping()
 public class JobController {
     @Autowired
     private CreateJobUseCase createJobUseCase;
@@ -28,7 +28,7 @@ public class JobController {
     @Autowired
     private GetJobsUseCase getJobsUseCase;
 
-    @PostMapping
+    @PostMapping("/companies/jobs")
     public ResponseEntity<Object> create(@Valid @RequestBody CreateJobDTO job, HttpServletRequest request) {
         String companyId = request.getAttribute("company_id").toString();
 
@@ -46,7 +46,7 @@ public class JobController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping
+    @GetMapping("/companies/jobs")
     public ResponseEntity<Object> list() {
         return ResponseEntity.ok(this.getJobsUseCase.execute());
     }
