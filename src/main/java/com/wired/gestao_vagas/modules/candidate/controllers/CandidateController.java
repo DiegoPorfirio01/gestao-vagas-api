@@ -27,23 +27,17 @@ public class CandidateController {
     private CreateCandidateUseCase createCandidateUseCase;
 
     @Autowired
-    private GetCandidatesUseCase getCandidatesUseCase;
-
-    @Autowired
     private GetPerfilCandidateUseCase getPerfilCandidateUseCase;
 
+    // Private (Get current candidate profile)
     @GetMapping("/candidates/me")
     public ResponseEntity<CandidateEntity> getCurrentPerfilCandidate(HttpServletRequest request) {
-        String candidateId = request.getHeader("candidate_id");
+        String candidateId = request.getAttribute("candidate_id").toString();
 
         return ResponseEntity.ok().body(getPerfilCandidateUseCase.execute(candidateId));
     }
 
-    @GetMapping("/candidates")
-    public ResponseEntity<List<CandidateEntity>> getCandidates() {
-        return ResponseEntity.ok().body(getCandidatesUseCase.execute());
-    }
-
+    // Public (Create a user candidate)
     @PostMapping("/candidates")
     public ResponseEntity<Object> createCandidate(@Valid @RequestBody CandidateEntity candidate) {
         try {
