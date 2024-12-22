@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wired.gestao_vagas.exceptions.AlreadyExistsException;
+import com.wired.gestao_vagas.modules.company.dtos.CompanyPublicDTO;
 import com.wired.gestao_vagas.modules.company.entities.CompanyEntity;
 import com.wired.gestao_vagas.modules.company.useCases.CreateCompanyUseCase;
 import com.wired.gestao_vagas.modules.company.useCases.GetCompaniesUseCase;
@@ -29,8 +30,11 @@ public class CompanyController {
     private GetCompaniesUseCase getCompaniesUseCase;
 
     @GetMapping
-    public List<CompanyEntity> getCompanies() {
-        return getCompaniesUseCase.execute();
+    public List<CompanyPublicDTO> getCompanies() {
+        return this.getCompaniesUseCase.execute()
+                .stream()
+                .map(CompanyPublicDTO::fromEntity)
+                .toList();
     }
 
     @PostMapping
