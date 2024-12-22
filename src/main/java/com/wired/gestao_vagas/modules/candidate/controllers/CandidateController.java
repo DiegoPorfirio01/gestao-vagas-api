@@ -32,9 +32,8 @@ public class CandidateController {
     @Autowired
     private GetPerfilCandidateUseCase getPerfilCandidateUseCase;
 
-    @GetMapping("/candidate")
+    @GetMapping("/candidates/me")
     public ResponseEntity<CandidateEntity> getCurrentPerfilCandidate(HttpServletRequest request) {
-
         String candidateId = request.getHeader("candidate_id");
 
         return ResponseEntity.ok().body(getPerfilCandidateUseCase.execute(candidateId));
