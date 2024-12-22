@@ -33,7 +33,7 @@ public class CandidateTokenStrategy implements InterfaceTokenStrategy {
     }
 
     @Override
-    public String validateToken(String token) {
+    public DecodedJWT validateToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKeyCandidate);
             JWTVerifier verifier = JWT.require(algorithm)
@@ -52,7 +52,7 @@ public class CandidateTokenStrategy implements InterfaceTokenStrategy {
                 throw new JWTVerificationException("Token não possui permissão de candidato");
             }
 
-            return jwt.getSubject();
+            return jwt;
         } catch (JWTVerificationException exception) {
             throw new JWTVerificationException("Token inválido: " + exception.getMessage());
         }

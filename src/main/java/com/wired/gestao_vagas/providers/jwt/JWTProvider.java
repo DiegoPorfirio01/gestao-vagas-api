@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.interfaces.DecodedJWT;
 
 @Service
 public class JWTProvider {
@@ -22,7 +23,7 @@ public class JWTProvider {
                 .generateToken(subject);
     }
 
-    public String validateToken(String token, String role) {
+    public DecodedJWT validateToken(String token, String role) {
         return tokenStrategies.stream()
                 .filter(strategy -> strategy.supportsRole(role))
                 .findFirst()

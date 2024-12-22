@@ -33,7 +33,7 @@ public class CompanyTokenStrategy implements InterfaceTokenStrategy {
     }
 
     @Override
-    public String validateToken(String token) {
+    public DecodedJWT validateToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKeyCompany);
             JWTVerifier verifier = JWT.require(algorithm)
@@ -52,7 +52,7 @@ public class CompanyTokenStrategy implements InterfaceTokenStrategy {
                 throw new JWTVerificationException("Token não possui permissão de empresa");
             }
 
-            return jwt.getSubject();
+            return jwt;
         } catch (JWTVerificationException exception) {
             throw new JWTVerificationException("Token inválido: " + exception.getMessage());
         }
