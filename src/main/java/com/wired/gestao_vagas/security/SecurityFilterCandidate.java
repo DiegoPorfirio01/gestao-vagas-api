@@ -1,7 +1,7 @@
 package com.wired.gestao_vagas.security;
 
 import java.io.IOException;
-import java.util.Collections;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -48,9 +48,11 @@ public class SecurityFilterCandidate extends OncePerRequestFilter {
                 }
 
                 request.setAttribute("candidate_id", decodedJWT.getSubject());
+
                 var roles = decodedJWT.getClaim("roles").asList(String.class);
 
-                var grants = roles.stream().map(role -> new SimpleGrantedAuthority(role)).toList();
+                List<SimpleGrantedAuthority> grants = roles.stream().map(role -> new SimpleGrantedAuthority(role))
+                        .toList();
 
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
                         decodedJWT.getSubject(), null, grants);
