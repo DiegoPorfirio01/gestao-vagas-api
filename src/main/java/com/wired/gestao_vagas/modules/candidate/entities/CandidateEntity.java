@@ -7,6 +7,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -42,6 +44,7 @@ public class CandidateEntity {
     @Column(unique = true)
     private String email;
 
+    @JsonIgnore
     @Length(min = 8, message = "Senha deve ter pelo menos 8 caracteres")
     @NotBlank(message = "Senha é obrigatório")
     private String password;
