@@ -2,19 +2,18 @@ package com.wired.gestao_vagas.modules.candidate.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import com.wired.gestao_vagas.exceptions.AlreadyExistsException;
 import com.wired.gestao_vagas.modules.candidate.entities.CandidateEntity;
 import com.wired.gestao_vagas.modules.candidate.useCases.CreateCandidateUseCase;
-import com.wired.gestao_vagas.modules.candidate.useCases.GetCandidatesUseCase;
 import com.wired.gestao_vagas.modules.candidate.useCases.GetPerfilCandidateUseCase;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -29,23 +28,19 @@ public class CandidateController {
     @Autowired
     private GetPerfilCandidateUseCase getPerfilCandidateUseCase;
 
-    // Private (Get current candidate profile)
+    // Private && ROLE_CANDIDATE (Get current candidate profile)
+    @PreAuthorize("hasRole('ROLE_CANDIDATE')")
     @GetMapping("/candidates/me")
     public ResponseEntity<CandidateEntity> getCurrentPerfilCandidate(HttpServletRequest request) {
-        String candidateId = request.getAttribute("candidate_id").toString();
-
-        return ResponseEntity.ok().body(getPerfilCandidateUseCase.execute(candidateId));
+        UUID candidateId = UUID.fromString(request.getAttribute("candidate_id").toString());
+        var candidate = this.getPerfilCandidateUseCase.execute(candidateId);
+        return ResponseEntity.ok(candidate);
     }
 
     // Public (Create a user candidate)
     @PostMapping("/candidates")
-    public ResponseEntity<Object> createCandidate(@Valid @RequestBody CandidateEntity candidate) {
-        try {
-            this.createCandidateUseCase.execute(candidate);
-        } catch (AlreadyExistsException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(true);
+    public ResponseEntity<Void> createCandidate(@Valid @RequestBody CandidateEntity candidate) {
+        this.createCandidateUseCase.execute(candidate);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

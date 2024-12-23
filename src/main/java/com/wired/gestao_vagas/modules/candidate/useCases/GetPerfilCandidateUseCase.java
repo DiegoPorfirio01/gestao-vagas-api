@@ -15,8 +15,8 @@ public class GetPerfilCandidateUseCase {
     @Autowired
     private CandidateRepository candidateRepository;
 
-    public CandidateEntity execute(String id) {
-        return candidateRepository.findById(UUID.fromString(id))
+    public CandidateEntity execute(UUID id) {
+        return candidateRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("Candidate not found"));
     }
 }

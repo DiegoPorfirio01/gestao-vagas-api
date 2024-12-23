@@ -51,7 +51,9 @@ public class SecurityFilterCompany extends OncePerRequestFilter {
 
                 var roles = subjectToken.getClaim("roles").asList(String.class);
 
-                List<SimpleGrantedAuthority> grants = roles.stream().map(role -> new SimpleGrantedAuthority(role))
+                // Adiciona o prefixo ROLE_ a cada role, pois é padrão do Spring Security
+                List<SimpleGrantedAuthority> grants = roles.stream()
+                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
                         .toList();
 
                 UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(

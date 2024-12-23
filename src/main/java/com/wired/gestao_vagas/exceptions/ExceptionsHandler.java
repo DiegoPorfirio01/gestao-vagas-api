@@ -15,6 +15,10 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.core.JsonParseException;
 
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
+
 @ControllerAdvice
 public class ExceptionsHandler {
     private MessageSource messageSource;
@@ -73,5 +77,63 @@ public class ExceptionsHandler {
 
         ErrorMessageDTO error = new ErrorMessageDTO(fieldName, message);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Object> handleNotFoundException(NotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(ex.getMessage());
+    }
+
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity<ErrorMessageDTO> handleAlreadyExistsException(AlreadyExistsException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorMessageDTO(ex.getField(), ex.getMessage()));
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<Object> handleAuthenticationException(AuthenticationException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ex.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<Object> handleGenericException(Exception ex) {
+        String message = "Erro interno do servidor";
+
+        if (ex instanceof IllegalArgumentException) {
+            message = "Argumento inválido: " + ex.getMessage();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
+        } else if (ex instanceof IllegalStateException) {
+            message = "Estado inválido da aplicação: " + ex.getMessage();
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
+        } else if (ex instanceof SecurityException) {
+            message = "Erro de segurança: acesso negado";
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(message);
+        } else if (ex instanceof UnsupportedOperationException) {
+            message = "Operação não suportada";
+            return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(message);
+        } else if (ex instanceof NullPointerException) {
+            message = "Erro de referência nula";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
+        }
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body("Acesso negado: você não tem permissão para realizar esta operação");
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    public ResponseEntity<Object> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
+                .body("Método HTTP não suportado para este endpoint");
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    public ResponseEntity<Object> handleMissingParams(MissingServletRequestParameterException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ex.getParameterName() + " Parâmetro obrigatório não fornecido");
     }
 }

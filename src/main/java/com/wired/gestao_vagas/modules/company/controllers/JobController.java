@@ -5,12 +5,14 @@ import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wired.gestao_vagas.exceptions.NotFoundException;
 import com.wired.gestao_vagas.modules.company.dtos.CreateJobDTO;
 import com.wired.gestao_vagas.modules.company.entities.JobEntity;
 import com.wired.gestao_vagas.modules.company.useCases.CreateJobUseCase;
@@ -28,20 +30,21 @@ public class JobController {
     @Autowired
     private GetJobsUseCase getJobsUseCase;
 
-    // Private (Create a job from current company)
+    // Private && ROLE_COMPANY (Create a job from current company)
+    @PreAuthorize("hasRole('ROLE_COMPANY')")
     @PostMapping("/companies/jobs")
     public ResponseEntity<Object> create(@Valid @RequestBody CreateJobDTO job, HttpServletRequest request) {
-        String companyId = request.getAttribute("company_id").toString();
+        UUID companyId = UUID.fromString(request.getAttribute("company_id").toString());
 
         JobEntity jobEntity = JobEntity.builder()
                 .title(job.getTitle())
                 .salary(job.getSalary())
-                .companyId(UUID.fromString(companyId))
+                .companyId(companyId)
                 .build();
         try {
             this.createJobUseCase.execute(jobEntity);
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
         }
 
         return ResponseEntity.status(HttpStatus.CREATED).build();

@@ -20,7 +20,6 @@ public class CreateJobUseCase {
 
     @ResponseStatus(HttpStatus.CREATED)
     public void execute(JobEntity job) {
-        System.out.println("job: " + job);
         this.companyRepository.findById(job.getCompanyId())
                 .orElseThrow(() -> new NotFoundException("Company not found"));
 

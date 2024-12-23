@@ -25,12 +25,12 @@ public class CreateCompanyUseCase {
 
         this.companyRepository.findBySlug(company.getSlug())
                 .ifPresent(user -> {
-                    throw new AlreadyExistsException("Company with this name already exists");
+                    throw new AlreadyExistsException("name", "Company with this name already exists");
                 });
 
         this.companyRepository.findByEmail(company.getEmail())
                 .ifPresent(user -> {
-                    throw new AlreadyExistsException("Email já está em uso");
+                    throw new AlreadyExistsException("email", "Email já está em uso");
                 });
 
         var encodedPassword = this.passwordEncoder.encode(company.getPassword());

@@ -1,11 +1,10 @@
 package com.wired.gestao_vagas.modules.company.useCases;
 
-import javax.naming.AuthenticationException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.wired.gestao_vagas.exceptions.AuthenticationException;
 import com.wired.gestao_vagas.exceptions.NotFoundException;
 import com.wired.gestao_vagas.modules.company.dtos.AuthCompanyDTO;
 import com.wired.gestao_vagas.modules.company.dtos.AuthCompanyResponse;

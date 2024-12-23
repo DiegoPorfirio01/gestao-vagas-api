@@ -23,13 +23,13 @@ public class CreateCandidateUseCase {
         // Verifica username
         this.candidatesRepository.findByUsername(candidate.getUsername())
                 .ifPresent(user -> {
-                    throw new AlreadyExistsException("Username já está em uso");
+                    throw new AlreadyExistsException("username", "Username already exists");
                 });
 
         // Verifica email
         this.candidatesRepository.findByEmail(candidate.getEmail())
                 .ifPresent(user -> {
-                    throw new AlreadyExistsException("Email já está em uso");
+                    throw new AlreadyExistsException("email", "Email already exists");
                 });
 
         candidate.setPassword(passwordEncoder.encode(candidate.getPassword()));
