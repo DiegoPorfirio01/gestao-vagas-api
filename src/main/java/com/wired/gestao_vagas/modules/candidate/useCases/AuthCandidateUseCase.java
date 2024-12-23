@@ -9,7 +9,6 @@ import com.wired.gestao_vagas.modules.candidate.dtos.AuthCandidateResponseDTO;
 import com.wired.gestao_vagas.modules.candidate.entities.CandidateEntity;
 import com.wired.gestao_vagas.modules.candidate.repositories.CandidateRepository;
 import com.wired.gestao_vagas.providers.jwt.JWTProvider;
-import com.wired.gestao_vagas.exceptions.NotFoundException;
 import com.wired.gestao_vagas.exceptions.AuthenticationException;
 
 @Service

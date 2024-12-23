@@ -24,6 +24,12 @@ public class SecurityConfig {
     @Autowired
     SecurityFilterCandidate securityFilterCandidate;
 
+    private static final String[] SwaggerMatchers = {
+            "/swagger-ui/**",
+            "/v3/api-docs/**",
+            "/swagger-resources/**"
+    };
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
@@ -35,7 +41,8 @@ public class SecurityConfig {
                             .requestMatchers(HttpMethod.POST, "/candidates").permitAll()
                             .requestMatchers(HttpMethod.GET, "/companies").permitAll()
                             .requestMatchers(HttpMethod.POST, "/companies").permitAll()
-                            .requestMatchers(HttpMethod.GET, "/companies/jobs").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/jobs").permitAll()
+                            .requestMatchers(HttpMethod.GET, SwaggerMatchers).permitAll()
                             .anyRequest().authenticated();
                 }).addFilterBefore(securityFilterCompany, BasicAuthenticationFilter.class)
                 .addFilterBefore(securityFilterCandidate, BasicAuthenticationFilter.class);

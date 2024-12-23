@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wired.gestao_vagas.exceptions.NotFoundException;
@@ -18,6 +19,11 @@ import com.wired.gestao_vagas.modules.company.entities.JobEntity;
 import com.wired.gestao_vagas.modules.company.useCases.CreateJobUseCase;
 import com.wired.gestao_vagas.modules.company.useCases.GetJobsUseCase;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
@@ -33,6 +39,15 @@ public class JobController {
     // Private && ROLE_COMPANY (Create a job from current company)
     @PreAuthorize("hasRole('ROLE_COMPANY')")
     @PostMapping("/companies/jobs")
+    @Tag(name = "Jobs")
+    @Operation(summary = "Create a job from current company")
+    @SecurityRequirement(name = "Bearer Authentication")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Job created successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid request body"),
+            @ApiResponse(responseCode = "404", description = "Company not found")
+    })
+
     public ResponseEntity<Object> create(@Valid @RequestBody CreateJobDTO job, HttpServletRequest request) {
         UUID companyId = UUID.fromString(request.getAttribute("company_id").toString());
 
@@ -41,18 +56,22 @@ public class JobController {
                 .salary(job.getSalary())
                 .companyId(companyId)
                 .build();
-        try {
-            this.createJobUseCase.execute(jobEntity);
-        } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-        }
+
+        this.createJobUseCase.execute(jobEntity);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     // Public (List all jobs from all companies)
-    @GetMapping("/companies/jobs")
-    public ResponseEntity<Object> list() {
-        return ResponseEntity.ok(this.getJobsUseCase.execute());
+    @GetMapping("/jobs")
+    @Tag(name = "Jobs")
+    @Operation(summary = "List all jobs from all companies")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Jobs listed successfully")
+    })
+    public ResponseEntity<Object> list(
+            @RequestParam(required = false) String title) {
+
+        return ResponseEntity.ok(this.getJobsUseCase.execute(title));
     }
 }

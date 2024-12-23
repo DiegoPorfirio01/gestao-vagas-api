@@ -13,7 +13,11 @@ public class GetJobsUseCase {
     @Autowired
     private JobRepository jobRepository;
 
-    public List<JobEntity> execute() {
+    public List<JobEntity> execute(String title) {
+        if (title != null) {
+            return this.jobRepository.findByTitleContainingIgnoreCase(title);
+        }
+
         return this.jobRepository.findAll();
     }
 }

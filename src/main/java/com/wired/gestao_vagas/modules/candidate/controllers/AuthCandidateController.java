@@ -11,6 +11,11 @@ import com.wired.gestao_vagas.modules.candidate.dtos.AuthCandidateDTO;
 import com.wired.gestao_vagas.modules.candidate.dtos.AuthCandidateResponseDTO;
 import com.wired.gestao_vagas.modules.candidate.useCases.AuthCandidateUseCase;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 @RestController
 @RequestMapping("/candidates")
 public class AuthCandidateController {
@@ -18,7 +23,14 @@ public class AuthCandidateController {
     @Autowired
     private AuthCandidateUseCase authCandidateUseCase;
 
+    // PUBLIC
     @PostMapping("/auth")
+    @Tag(name = "Candidates")
+    @Operation(summary = "Authenticate a candidate")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Candidate authenticated successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid request body")
+    })
     public ResponseEntity<AuthCandidateResponseDTO> auth(@RequestBody AuthCandidateDTO data) {
         AuthCandidateResponseDTO authCandidateResponse = authCandidateUseCase.execute(data);
 
