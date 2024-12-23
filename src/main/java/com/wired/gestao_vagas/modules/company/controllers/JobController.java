@@ -1,5 +1,6 @@
 package com.wired.gestao_vagas.modules.company.controllers;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wired.gestao_vagas.exceptions.NotFoundException;
-import com.wired.gestao_vagas.modules.company.dtos.CreateJobDTO;
+import com.wired.gestao_vagas.modules.company.dtos.CreateJobBodyDTO;
+import com.wired.gestao_vagas.modules.company.dtos.GetJobResponseDTO;
 import com.wired.gestao_vagas.modules.company.entities.JobEntity;
 import com.wired.gestao_vagas.modules.company.useCases.CreateJobUseCase;
 import com.wired.gestao_vagas.modules.company.useCases.GetJobsUseCase;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -29,49 +32,50 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping()
+@Tag(name = "Jobs")
 public class JobController {
-    @Autowired
-    private CreateJobUseCase createJobUseCase;
+        @Autowired
+        private CreateJobUseCase createJobUseCase;
 
-    @Autowired
-    private GetJobsUseCase getJobsUseCase;
+        @Autowired
+        private GetJobsUseCase getJobsUseCase;
 
-    // Private && ROLE_COMPANY (Create a job from current company)
-    @PreAuthorize("hasRole('ROLE_COMPANY')")
-    @PostMapping("/companies/jobs")
-    @Tag(name = "Jobs")
-    @Operation(summary = "Create a job from current company")
-    @SecurityRequirement(name = "Bearer Authentication")
-    @ApiResponses({
-            @ApiResponse(responseCode = "201", description = "Job created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid request body"),
-            @ApiResponse(responseCode = "404", description = "Company not found")
-    })
+        // Private && ROLE_COMPANY (Create a job from current company)
+        @PreAuthorize("hasRole('ROLE_COMPANY')")
+        @PostMapping("/companies/jobs")
+        @Operation(summary = "Create a job from current company")
+        @SecurityRequirement(name = "Bearer Authentication")
+        @ApiResponses({
+                        @ApiResponse(responseCode = "201", description = "Job created successfully", content = @Content(schema = @Schema(hidden = true))),
+                        @ApiResponse(responseCode = "400", description = "Invalid request body", content = @Content(schema = @Schema(hidden = true))),
+                        @ApiResponse(responseCode = "404", description = "Company not found", content = @Content(schema = @Schema(hidden = true)))
+        })
 
-    public ResponseEntity<Object> create(@Valid @RequestBody CreateJobDTO job, HttpServletRequest request) {
-        UUID companyId = UUID.fromString(request.getAttribute("company_id").toString());
+        public ResponseEntity<Void> create(@Valid @RequestBody CreateJobBodyDTO job, HttpServletRequest request) {
+                UUID companyId = UUID.fromString(request.getAttribute("company_id").toString());
 
-        JobEntity jobEntity = JobEntity.builder()
-                .title(job.getTitle())
-                .salary(job.getSalary())
-                .companyId(companyId)
-                .build();
+                JobEntity jobEntity = JobEntity.builder()
+                                .title(job.getTitle())
+                                .salary(job.getSalary())
+                                .companyId(companyId)
+                                .build();
 
-        this.createJobUseCase.execute(jobEntity);
+                this.createJobUseCase.execute(jobEntity);
 
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
+                return ResponseEntity.status(HttpStatus.CREATED).build();
+        }
 
-    // Public (List all jobs from all companies)
-    @GetMapping("/jobs")
-    @Tag(name = "Jobs")
-    @Operation(summary = "List all jobs from all companies")
-    @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Jobs listed successfully")
-    })
-    public ResponseEntity<Object> list(
-            @RequestParam(required = false) String title) {
+        // Public (List all jobs from all companies)
+        @GetMapping("/jobs")
+        @Operation(summary = "List all jobs from all companies")
+        @ApiResponses({
+                        @ApiResponse(responseCode = "200", description = "Jobs listed successfully", content = @Content(schema = @Schema(implementation = GetJobResponseDTO.class)))
+        })
+        public ResponseEntity<List<GetJobResponseDTO>> list(
+                        @RequestParam(required = false) String title) {
 
-        return ResponseEntity.ok(this.getJobsUseCase.execute(title));
-    }
+                List<JobEntity> jobs = this.getJobsUseCase.execute(title);
+
+                return ResponseEntity.ok(jobs.stream().map(GetJobResponseDTO::fromEntity).toList());
+        }
 }

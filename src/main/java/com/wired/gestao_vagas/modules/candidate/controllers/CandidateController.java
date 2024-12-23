@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.wired.gestao_vagas.modules.candidate.dtos.CreateCandidateBodyDTO;
+import com.wired.gestao_vagas.modules.candidate.dtos.GetCandidateResponseDTO;
 import com.wired.gestao_vagas.modules.candidate.entities.CandidateEntity;
 import com.wired.gestao_vagas.modules.candidate.useCases.CreateCandidateUseCase;
 import com.wired.gestao_vagas.modules.candidate.useCases.GetPerfilCandidateUseCase;
@@ -24,8 +26,11 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 @RestController
+@Tag(name = "Candidates")
 @RequestMapping("/candidates")
 public class CandidateController {
 
@@ -38,30 +43,45 @@ public class CandidateController {
     // Private && ROLE_CANDIDATE (Get current candidate profile)
     @PreAuthorize("hasRole('ROLE_CANDIDATE')")
     @GetMapping("/me")
-    @Tag(name = "Candidates")
     @Operation(summary = "Get current candidate profile")
     @SecurityRequirement(name = "Bearer Authentication")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Candidate profile retrieved successfully"),
-            @ApiResponse(responseCode = "404", description = "Candidate not found"),
-            @ApiResponse(responseCode = "401", description = "Unauthorized")
+            @ApiResponse(responseCode = "200", description = "Candidate profile retrieved successfully", content = @Content(schema = @Schema(implementation = GetCandidateResponseDTO.class))),
+            @ApiResponse(responseCode = "404", description = "Candidate not found", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
     })
-    public ResponseEntity<CandidateEntity> getCurrentPerfilCandidate(HttpServletRequest request) {
+    public ResponseEntity<GetCandidateResponseDTO> getCurrentPerfilCandidate(HttpServletRequest request) {
+
         UUID candidateId = UUID.fromString(request.getAttribute("candidate_id").toString());
-        var candidate = this.getPerfilCandidateUseCase.execute(candidateId);
-        return ResponseEntity.ok(candidate);
+
+        CandidateEntity candidate = this.getPerfilCandidateUseCase.execute(candidateId);
+
+        GetCandidateResponseDTO candidateResponse = GetCandidateResponseDTO.fromEntity(candidate);
+
+        return ResponseEntity.ok(candidateResponse);
     }
 
     // Public (Create a user candidate)
     @PostMapping
-    @Tag(name = "Candidates")
     @Operation(summary = "Create a user candidate")
     @ApiResponses({
             @ApiResponse(responseCode = "201", description = "Candidate created successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid request body")
+            @ApiResponse(responseCode = "400", description = "Invalid request body"),
+            @ApiResponse(responseCode = "409", description = "Conflict with another candidate")
     })
-    public ResponseEntity<Void> createCandidate(@Valid @RequestBody CandidateEntity candidate) {
-        this.createCandidateUseCase.execute(candidate);
+    public ResponseEntity<Void> createCandidate(@Valid @RequestBody CreateCandidateBodyDTO candidate) {
+
+        CandidateEntity candidateEntity = CandidateEntity.builder()
+                .name(candidate.name())
+                .username(candidate.username())
+                .email(candidate.email())
+                .password(candidate.password())
+                .description(candidate.description())
+                .curriculum(candidate.curriculum())
+                .build();
+
+        this.createCandidateUseCase.execute(candidateEntity);
+
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

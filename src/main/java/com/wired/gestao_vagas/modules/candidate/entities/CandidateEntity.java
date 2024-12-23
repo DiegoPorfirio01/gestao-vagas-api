@@ -18,12 +18,17 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
-
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Table(name = "candidates")
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CandidateEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

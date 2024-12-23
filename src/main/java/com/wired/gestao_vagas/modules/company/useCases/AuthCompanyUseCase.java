@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.wired.gestao_vagas.exceptions.AuthenticationException;
 import com.wired.gestao_vagas.exceptions.NotFoundException;
-import com.wired.gestao_vagas.modules.company.dtos.AuthCompanyDTO;
+import com.wired.gestao_vagas.modules.company.dtos.AuthCompanyBodyDTO;
 import com.wired.gestao_vagas.modules.company.dtos.AuthCompanyResponse;
 import com.wired.gestao_vagas.modules.company.entities.CompanyEntity;
 import com.wired.gestao_vagas.modules.company.repositories.CompanyRepository;
@@ -23,7 +23,7 @@ public class AuthCompanyUseCase {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public AuthCompanyResponse execute(AuthCompanyDTO data) throws AuthenticationException {
+    public AuthCompanyResponse execute(AuthCompanyBodyDTO data) throws AuthenticationException {
         CompanyEntity company = companyRepository.findByEmail(data.getEmail())
                 .orElseThrow(() -> new NotFoundException("Company not found"));
 

@@ -12,11 +12,14 @@ import com.wired.gestao_vagas.modules.candidate.dtos.AuthCandidateResponseDTO;
 import com.wired.gestao_vagas.modules.candidate.useCases.AuthCandidateUseCase;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
+@Tag(name = "Auth")
 @RequestMapping("/candidates")
 public class AuthCandidateController {
 
@@ -25,11 +28,11 @@ public class AuthCandidateController {
 
     // PUBLIC
     @PostMapping("/auth")
-    @Tag(name = "Candidates")
     @Operation(summary = "Authenticate a candidate")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "Candidate authenticated successfully"),
-            @ApiResponse(responseCode = "400", description = "Invalid request body")
+            @ApiResponse(responseCode = "200", description = "Candidate authenticated successfully", content = @Content(schema = @Schema(implementation = AuthCandidateResponseDTO.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid request body", content = @Content(schema = @Schema(hidden = true))),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
     })
     public ResponseEntity<AuthCandidateResponseDTO> auth(@RequestBody AuthCandidateDTO data) {
         AuthCandidateResponseDTO authCandidateResponse = authCandidateUseCase.execute(data);

@@ -1,66 +1,42 @@
-package com.wired.gestao_vagas.modules.company.entities;
+package com.wired.gestao_vagas.modules.company.dtos;
 
-import java.time.LocalDateTime;
-import java.util.UUID;
-
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 import org.hibernate.validator.constraints.Length;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@Entity
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "companies")
-public class CompanyEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID id;
-
+@AllArgsConstructor
+@Schema(description = "Body of the company creation")
+public class CreateCompanyBodyDTO {
     @NotBlank(message = "Nome é obrigatório")
     @Length(min = 3, max = 255, message = "Nome deve ter entre 3 e 255 caracteres")
+    @Schema(description = "Nome da empresa", example = "Wired")
     private String name;
-
-    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Slug deve conter apenas letras e números e não pode conter espaços")
-    @Column(unique = true)
-    private String slug;
 
     @Email(message = "Email inválido")
     @NotBlank(message = "Email é obrigatório")
     @Column(unique = true)
+    @Schema(description = "Email da empresa", example = "wired@gmail.com")
     private String email;
 
     @Pattern(regexp = "^www\\.[a-zA-Z0-9-]+\\.(com|com\\.br)$", message = "Website deve estar no formato www.dominio.com ou www.dominio.com.br")
     @NotBlank(message = "Website é obrigatório")
+    @Schema(description = "Website da empresa", example = "www.wired.com")
     private String website;
 
     @Length(min = 8, message = "A senha deve ter pelo menos 8 caracteres")
     @NotBlank(message = "A senha é obrigatória")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @Schema(description = "Senha da empresa", example = "12345678")
     private String password;
 
+    @Schema(description = "Descrição da empresa", example = "A Wired é uma empresa de tecnologia que desenvolve soluções para o mercado")
     private String description;
-
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
 }
