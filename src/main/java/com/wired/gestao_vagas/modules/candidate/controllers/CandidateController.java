@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.wired.gestao_vagas.modules.candidate.dtos.CreateApplyJobBodyDTO;
 import com.wired.gestao_vagas.modules.candidate.dtos.CreateCandidateBodyDTO;
 import com.wired.gestao_vagas.modules.candidate.dtos.GetCandidateResponseDTO;
 import com.wired.gestao_vagas.modules.candidate.entities.CandidateEntity;
+import com.wired.gestao_vagas.modules.candidate.useCases.ApplyJobCandidateUseCase;
 import com.wired.gestao_vagas.modules.candidate.useCases.CreateCandidateUseCase;
 import com.wired.gestao_vagas.modules.candidate.useCases.GetPerfilCandidateUseCase;
 
@@ -39,6 +41,9 @@ public class CandidateController {
 
     @Autowired
     private GetPerfilCandidateUseCase getPerfilCandidateUseCase;
+
+    @Autowired
+    private ApplyJobCandidateUseCase applyJobCandidateUseCase;
 
     // Private && ROLE_CANDIDATE (Get current candidate profile)
     @PreAuthorize("hasRole('ROLE_CANDIDATE')")
@@ -81,6 +86,25 @@ public class CandidateController {
                 .build();
 
         this.createCandidateUseCase.execute(candidateEntity);
+
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @PostMapping("/apply_job")
+    @PreAuthorize("hasRole('ROLE_CANDIDATE')")
+    @Operation(summary = "Apply for a job")
+    @ApiResponses({
+            @ApiResponse(responseCode = "201", description = "Job applied successfully"),
+            @ApiResponse(responseCode = "400", description = "Invalid request body"),
+            @ApiResponse(responseCode = "404", description = "Job not found"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
+    })
+    @SecurityRequirement(name = "Bearer Authentication")
+    public ResponseEntity<Void> applyJob(@RequestBody @Valid CreateApplyJobBodyDTO createApplyJobBodyDTO,
+            HttpServletRequest request) {
+        UUID candidateId = UUID.fromString(request.getAttribute("candidate_id").toString());
+
+        this.applyJobCandidateUseCase.execute(createApplyJobBodyDTO.jobId(), candidateId);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
