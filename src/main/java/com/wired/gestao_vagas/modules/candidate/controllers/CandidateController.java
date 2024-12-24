@@ -69,7 +69,7 @@ public class CandidateController {
             @ApiResponse(responseCode = "400", description = "Invalid request body"),
             @ApiResponse(responseCode = "409", description = "Conflict with another candidate")
     })
-    public ResponseEntity<Void> createCandidate(@Valid @RequestBody CreateCandidateBodyDTO candidate) {
+    public ResponseEntity<Void> createCandidate(@RequestBody @Valid CreateCandidateBodyDTO candidate) {
 
         CandidateEntity candidateEntity = CandidateEntity.builder()
                 .name(candidate.name())

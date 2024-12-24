@@ -17,6 +17,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 
 @RestController
 @Tag(name = "Auth")
@@ -34,7 +35,7 @@ public class AuthCandidateController {
             @ApiResponse(responseCode = "400", description = "Invalid request body", content = @Content(schema = @Schema(hidden = true))),
             @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema(hidden = true)))
     })
-    public ResponseEntity<AuthCandidateResponseDTO> auth(@RequestBody AuthCandidateDTO data) {
+    public ResponseEntity<AuthCandidateResponseDTO> auth(@RequestBody @Valid AuthCandidateDTO data) {
         AuthCandidateResponseDTO authCandidateResponse = authCandidateUseCase.execute(data);
 
         return ResponseEntity.ok().body(authCandidateResponse);

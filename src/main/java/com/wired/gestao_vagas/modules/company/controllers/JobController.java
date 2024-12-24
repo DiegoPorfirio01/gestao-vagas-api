@@ -51,7 +51,7 @@ public class JobController {
                         @ApiResponse(responseCode = "404", description = "Company not found", content = @Content(schema = @Schema(hidden = true)))
         })
 
-        public ResponseEntity<Void> create(@Valid @RequestBody CreateJobBodyDTO job, HttpServletRequest request) {
+        public ResponseEntity<Void> create(@RequestBody @Valid CreateJobBodyDTO job, HttpServletRequest request) {
                 UUID companyId = UUID.fromString(request.getAttribute("company_id").toString());
 
                 JobEntity jobEntity = JobEntity.builder()

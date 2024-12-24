@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import com.wired.gestao_vagas.modules.candidate.entities.CandidateEntity;
-import com.wired.gestao_vagas.modules.company.entities.CompanyEntity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
