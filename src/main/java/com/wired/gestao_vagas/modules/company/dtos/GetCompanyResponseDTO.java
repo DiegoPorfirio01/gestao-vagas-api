@@ -21,16 +21,16 @@ public class GetCompanyResponseDTO {
     @Schema(description = "Company ID", example = "1")
     private UUID id;
 
-    @Schema(description = "Nome da empresa", example = "Wired")
+    @Schema(description = "Company name", example = "Wired")
     private String name;
 
-    @Schema(description = "Descrição da empresa", example = "A Wired é uma empresa de tecnologia que desenvolve soluções para o mercado")
+    @Schema(description = "Company description", example = "A Wired is a technology company that develops solutions for the market")
     private String description;
 
-    @Schema(description = "Website da empresa", example = "www.wired.com")
+    @Schema(description = "Company website", example = "www.wired.com")
     private String website;
 
-    @Schema(description = "Data de criação da empresa", example = "2024-01-01")
+    @Schema(description = "Company creation date", example = "2024-01-01")
     private LocalDateTime createdAt;
 
     public static GetCompanyResponseDTO fromEntity(CompanyEntity company) {

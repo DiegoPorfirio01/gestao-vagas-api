@@ -20,13 +20,11 @@ public class CreateCandidateUseCase {
 
     @ResponseStatus(HttpStatus.CREATED)
     public void execute(CandidateEntity candidate) {
-        // Verifica username
         this.candidatesRepository.findByUsername(candidate.getUsername())
                 .ifPresent(user -> {
                     throw new AlreadyExistsException("username", "Username already exists");
                 });
 
-        // Verifica email
         this.candidatesRepository.findByEmail(candidate.getEmail())
                 .ifPresent(user -> {
                     throw new AlreadyExistsException("email", "Email already exists");

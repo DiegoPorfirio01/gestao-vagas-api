@@ -16,27 +16,27 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Schema(description = "Body of the company creation")
 public class CreateCompanyBodyDTO {
-    @NotBlank(message = "Nome é obrigatório")
-    @Length(min = 3, max = 255, message = "Nome deve ter entre 3 e 255 caracteres")
-    @Schema(description = "Nome da empresa", example = "Wired")
+    @NotBlank(message = "Name is required")
+    @Length(min = 3, max = 255, message = "Name must be between 3 and 255 characters")
+    @Schema(description = "Company name", example = "Wired")
     private String name;
 
-    @Email(message = "Email inválido")
-    @NotBlank(message = "Email é obrigatório")
+    @Email(message = "Invalid email")
+    @NotBlank(message = "Email is required")
     @Column(unique = true)
-    @Schema(description = "Email da empresa", example = "wired@gmail.com")
+    @Schema(description = "Company email", example = "wired@gmail.com")
     private String email;
 
-    @Pattern(regexp = "^www\\.[a-zA-Z0-9-]+\\.(com|com\\.br)$", message = "Website deve estar no formato www.dominio.com ou www.dominio.com.br")
-    @NotBlank(message = "Website é obrigatório")
-    @Schema(description = "Website da empresa", example = "www.wired.com")
+    @Pattern(regexp = "^www\\.[a-zA-Z0-9-]+\\.(com|com\\.br)$", message = "Website must be in the format www.domain.com or www.domain.com.br")
+    @NotBlank(message = "Website is required")
+    @Schema(description = "Company website", example = "www.wired.com")
     private String website;
 
-    @Length(min = 8, message = "A senha deve ter pelo menos 8 caracteres")
-    @NotBlank(message = "A senha é obrigatória")
-    @Schema(description = "Senha da empresa", example = "12345678")
+    @Length(min = 8, message = "Password must be at least 8 characters")
+    @NotBlank(message = "Password is required")
+    @Schema(description = "Company password", example = "12345678")
     private String password;
 
-    @Schema(description = "Descrição da empresa", example = "A Wired é uma empresa de tecnologia que desenvolve soluções para o mercado")
+    @Schema(description = "Company description", example = "A Wired is a technology company that develops solutions for the market")
     private String description;
 }

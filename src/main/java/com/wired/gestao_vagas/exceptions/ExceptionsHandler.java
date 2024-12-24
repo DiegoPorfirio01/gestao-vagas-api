@@ -42,7 +42,7 @@ public class ExceptionsHandler {
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErrorMessageDTO> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
-        String message = "Erro de formato inválido";
+        String message = "Invalid format error";
         String fieldName = "";
 
         Throwable cause = ex.getCause();
@@ -53,23 +53,23 @@ public class ExceptionsHandler {
             }
 
             if (ex.getMessage().contains("java.math.BigDecimal")) {
-                message = "Formato de número inválido. Use apenas números e ponto decimal (exemplo: 1000.00)";
+                message = "Invalid number format. Use only numbers and decimal point (example: 1000.00)";
             } else if (ex.getMessage().contains("java.time.LocalDate")) {
-                message = "Formato de data inválido. Use o formato yyyy-MM-dd (exemplo: 2024-03-20)";
+                message = "Invalid date format. Use format yyyy-MM-dd (example: 2024-03-20)";
             } else if (ex.getMessage().contains("java.time.LocalDateTime")) {
-                message = "Formato de data e hora inválido. Use o formato yyyy-MM-dd'T'HH:mm:ss (exemplo: 2024-03-20T14:30:00)";
+                message = "Invalid date and time format. Use format yyyy-MM-dd'T'HH:mm:ss (example: 2024-03-20T14:30:00)";
             } else if (ex.getMessage().contains("java.lang.Boolean")) {
-                message = "Formato booleano inválido. Use 'true' ou 'false'";
+                message = "Invalid boolean format. Use 'true' or 'false'";
             } else if (ex.getMessage().contains("java.lang.Integer")) {
-                message = "Formato de número inteiro inválido. Use apenas números inteiros";
+                message = "Invalid integer number format. Use only integer numbers";
             } else if (ex.getMessage().contains("java.lang.Long")) {
-                message = "Formato de número inteiro longo inválido. Use apenas números inteiros";
+                message = "Invalid long integer number format. Use only integer numbers";
             } else if (ex.getMessage().contains("java.lang.Double")) {
-                message = "Formato de número decimal inválido. Use ponto como separador decimal";
+                message = "Invalid decimal number format. Use point as decimal separator";
             } else if (ex.getMessage().contains("java.util.UUID")) {
-                message = "Formato UUID inválido";
+                message = "Invalid UUID format";
             } else if (ex.getMessage().contains("com.fasterxml.jackson.databind.exc.InvalidFormatException")) {
-                message = "Valor fornecido não é válido para o tipo de dado esperado";
+                message = "Provided value is not valid for the expected data type";
             }
         } else if (cause instanceof JsonParseException) {
             message = "JSON mal formatado. Verifique a sintaxe do JSON enviado";
@@ -97,22 +97,22 @@ public class ExceptionsHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGenericException(Exception ex) {
-        String message = "Erro interno do servidor";
+        String message = "Internal server error";
 
         if (ex instanceof IllegalArgumentException) {
-            message = "Argumento inválido: " + ex.getMessage();
+            message = "Invalid argument: " + ex.getMessage();
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(message);
         } else if (ex instanceof IllegalStateException) {
-            message = "Estado inválido da aplicação: " + ex.getMessage();
+            message = "Invalid application state: " + ex.getMessage();
             return ResponseEntity.status(HttpStatus.CONFLICT).body(message);
         } else if (ex instanceof SecurityException) {
-            message = "Erro de segurança: acesso negado";
+            message = "Security error: access denied";
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(message);
         } else if (ex instanceof UnsupportedOperationException) {
-            message = "Operação não suportada";
+            message = "Unsupported operation";
             return ResponseEntity.status(HttpStatus.NOT_IMPLEMENTED).body(message);
         } else if (ex instanceof NullPointerException) {
-            message = "Erro de referência nula";
+            message = "Null reference error";
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(message);
         }
 
@@ -122,18 +122,18 @@ public class ExceptionsHandler {
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<Object> handleAccessDeniedException(AccessDeniedException ex) {
         return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body("Acesso negado: você não tem permissão para realizar esta operação");
+                .body("Access denied: you do not have permission to perform this operation");
     }
 
     @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
     public ResponseEntity<Object> handleMethodNotSupported(HttpRequestMethodNotSupportedException ex) {
         return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED)
-                .body("Método HTTP não suportado para este endpoint");
+                .body("HTTP method not supported for this endpoint");
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
     public ResponseEntity<Object> handleMissingParams(MissingServletRequestParameterException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(ex.getParameterName() + " Parâmetro obrigatório não fornecido");
+                .body(ex.getParameterName() + " Required parameter not provided");
     }
 }

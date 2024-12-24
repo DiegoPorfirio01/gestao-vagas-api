@@ -7,17 +7,17 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
-@Schema(description = "DTO para criação de candidato")
+@Schema(description = "DTO for creating a candidate")
 public record CreateCandidateBodyDTO(
-        @Schema(description = "Nome do candidato", example = "John Doe") @NotBlank(message = "Nome é obrigatório") @Length(min = 3, max = 255, message = "Nome deve ter entre 3 e 255 caracteres") String name,
+                @Schema(description = "Candidate name", example = "John Doe") @NotBlank(message = "Name is required") @Length(min = 3, max = 255, message = "Name must be between 3 and 255 characters") String name,
 
-        @Schema(description = "Username do candidato", example = "john_doe") @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Username deve conter apenas letras e números e não pode conter espaços") @NotBlank(message = "Username é obrigatório") @Length(min = 3, max = 20, message = "Username deve ter entre 3 e 20 caracteres") String username,
+                @Schema(description = "Candidate username", example = "john_doe") @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Username must contain only letters and numbers and cannot contain spaces") @NotBlank(message = "Username is required") @Length(min = 3, max = 20, message = "Username must be between 3 and 20 characters") String username,
 
-        @Schema(description = "Email do candidato", example = "john.doe@example.com") @Email(message = "Email inválido") @NotBlank(message = "Email é obrigatório") String email,
+                @Schema(description = "Candidate email", example = "john.doe@example.com") @Email(message = "Invalid email") @NotBlank(message = "Email is required") String email,
 
-        @Schema(description = "Senha do candidato", example = "12345678") @Length(min = 8, message = "Senha deve ter pelo menos 8 caracteres") @NotBlank(message = "Senha é obrigatório") String password,
+                @Schema(description = "Candidate password", example = "12345678") @Length(min = 8, message = "Password must be at least 8 characters") @NotBlank(message = "Password is required") String password,
 
-        @Schema(description = "Descrição do candidato", example = "John Doe é um desenvolvedor full stack com 5 anos de experiência") String description,
+                @Schema(description = "Candidate description", example = "John Doe is a full stack developer with 5 years of experience") String description,
 
-        @Schema(description = "Currículo do candidato", example = "https://www.linkedin.com/in/john-doe-1234567890") String curriculum) {
+                @Schema(description = "Candidate curriculum", example = "https://www.linkedin.com/in/john-doe-1234567890") String curriculum) {
 }

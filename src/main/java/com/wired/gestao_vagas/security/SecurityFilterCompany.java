@@ -32,7 +32,6 @@ public class SecurityFilterCompany extends OncePerRequestFilter {
             @NonNull FilterChain filterChain)
             throws ServletException, IOException {
 
-        // Verifica se a requisição é para um endpoint de company
         if (request.getRequestURI().startsWith("/companies")) {
             SecurityContextHolder.getContext().setAuthentication(null);
             String header = request.getHeader("Authorization");
@@ -51,7 +50,6 @@ public class SecurityFilterCompany extends OncePerRequestFilter {
 
                 var roles = subjectToken.getClaim("roles").asList(String.class);
 
-                // Adiciona o prefixo ROLE_ a cada role, pois é padrão do Spring Security
                 List<SimpleGrantedAuthority> grants = roles.stream()
                         .map(role -> new SimpleGrantedAuthority("ROLE_" + role.toUpperCase()))
                         .toList();

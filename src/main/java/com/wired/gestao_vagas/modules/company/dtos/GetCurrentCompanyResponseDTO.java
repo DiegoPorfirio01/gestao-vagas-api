@@ -20,19 +20,19 @@ public class GetCurrentCompanyResponseDTO {
     @Schema(description = "Company ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")
     private UUID id;
 
-    @Schema(description = "Nome da empresa", example = "Wired")
+    @Schema(description = "Company name", example = "Wired")
     private String name;
 
-    @Schema(description = "Email da empresa", example = "wired@gmail.com")
+    @Schema(description = "Company email", example = "wired@gmail.com")
     private String email;
 
-    @Schema(description = "Website da empresa", example = "www.wired.com")
+    @Schema(description = "Company website", example = "www.wired.com")
     private String website;
 
-    @Schema(description = "Descrição da empresa", example = "A Wired é uma empresa de tecnologia que desenvolve soluções para o mercado")
+    @Schema(description = "Company description", example = "Wired is a technology company that develops market solutions")
     private String description;
 
-    @Schema(description = "Data de criação da empresa", example = "2024-01-01")
+    @Schema(description = "Company creation date", example = "2024-01-01")
     private LocalDateTime createdAt;
 
     public static GetCurrentCompanyResponseDTO fromEntity(CompanyEntity company) {

@@ -12,9 +12,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Schema(description = "Response of the company authentication")
 public class AuthCompanyResponse {
-    @Schema(description = "Token of the company authentication", example = "1234567890")
+    @Schema(description = "Company authentication token", example = "1234567890")
     private String token;
 
-    @Schema(description = "Expires in of the company authentication", example = "1234567890")
+    @Schema(description = "Company authentication expires in", example = "1234567890")
     private Long expiresIn;
 }

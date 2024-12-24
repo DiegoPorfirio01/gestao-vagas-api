@@ -34,23 +34,23 @@ public class CandidateEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotBlank(message = "Nome é obrigatório")
-    @Length(min = 3, max = 255, message = "Nome deve ter entre 3 e 255 caracteres")
+    @NotBlank(message = "Name is required")
+    @Length(min = 3, max = 255, message = "Name must be between 3 and 255 characters")
     private String name;
 
-    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Username deve conter apenas letras e números e não pode conter espaços")
-    @NotBlank(message = "Username é obrigatório")
-    @Length(min = 3, max = 20, message = "Username deve ter entre 3 e 20 caracteres")
+    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Username must contain only letters and numbers without spaces")
+    @NotBlank(message = "Username is required")
+    @Length(min = 3, max = 20, message = "Username must be between 3 and 20 characters")
     @Column(unique = true)
     private String username;
 
-    @Email(message = "Email inválido")
-    @NotBlank(message = "Email é obrigatório")
+    @Email(message = "Invalid email")
+    @NotBlank(message = "Email is required")
     @Column(unique = true)
     private String email;
 
-    @Length(min = 8, message = "Senha deve ter pelo menos 8 caracteres")
-    @NotBlank(message = "Senha é obrigatório")
+    @Length(min = 8, message = "Password must be at least 8 characters")
+    @NotBlank(message = "Password is required")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
     private String description;

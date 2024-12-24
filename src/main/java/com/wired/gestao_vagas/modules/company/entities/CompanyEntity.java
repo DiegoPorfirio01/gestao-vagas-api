@@ -34,25 +34,25 @@ public class CompanyEntity {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    @NotBlank(message = "Nome é obrigatório")
-    @Length(min = 3, max = 255, message = "Nome deve ter entre 3 e 255 caracteres")
+    @NotBlank(message = "Name is required")
+    @Length(min = 3, max = 255, message = "Name must be between 3 and 255 characters")
     private String name;
 
-    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Slug deve conter apenas letras e números e não pode conter espaços")
+    @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Slug must contain only letters and numbers without spaces")
     @Column(unique = true)
     private String slug;
 
-    @Email(message = "Email inválido")
-    @NotBlank(message = "Email é obrigatório")
+    @Email(message = "Invalid email")
+    @NotBlank(message = "Email is required")
     @Column(unique = true)
     private String email;
 
-    @Pattern(regexp = "^www\\.[a-zA-Z0-9-]+\\.(com|com\\.br)$", message = "Website deve estar no formato www.dominio.com ou www.dominio.com.br")
-    @NotBlank(message = "Website é obrigatório")
+    @Pattern(regexp = "^www\\.[a-zA-Z0-9-]+\\.(com|com\\.br)$", message = "Website must be in format www.domain.com or www.domain.com.br")
+    @NotBlank(message = "Website is required")
     private String website;
 
-    @Length(min = 8, message = "A senha deve ter pelo menos 8 caracteres")
-    @NotBlank(message = "A senha é obrigatória")
+    @Length(min = 8, message = "Password must be at least 8 characters")
+    @NotBlank(message = "Password is required")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 

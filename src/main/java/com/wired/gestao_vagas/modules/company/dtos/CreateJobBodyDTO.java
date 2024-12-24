@@ -13,9 +13,9 @@ import lombok.Data;
 @Schema(description = "Body of the job creation")
 public class CreateJobBodyDTO {
     @NotBlank(message = "Title is required")
-    @Schema(description = "Title of the job", example = "Software Engineer")
+    @Schema(description = "Job title", example = "Software Engineer")
     private String title;
     @NotNull(message = "Salary is required")
-    @Schema(description = "Salary of the job", example = "10000.00")
+    @Schema(description = "Job salary", example = "10000.00")
     private BigDecimal salary;
 }

@@ -44,17 +44,17 @@ public class CandidateTokenStrategy implements InterfaceTokenStrategy {
             DecodedJWT jwt = verifier.verify(token);
 
             if (jwt.getExpiresAt().before(new Date())) {
-                throw new JWTVerificationException("Token expirado");
+                throw new JWTVerificationException("Token expired");
             }
 
             List<String> roles = jwt.getClaim("roles").asList(String.class);
             if (!roles.contains("candidate")) {
-                throw new JWTVerificationException("Token não possui permissão de candidato");
+                throw new JWTVerificationException("Token does not have candidate permission");
             }
 
             return jwt;
         } catch (JWTVerificationException exception) {
-            throw new JWTVerificationException("Token inválido: " + exception.getMessage());
+            throw new JWTVerificationException("Invalid token: " + exception.getMessage());
         }
     }
 

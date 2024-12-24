@@ -44,17 +44,17 @@ public class CompanyTokenStrategy implements InterfaceTokenStrategy {
             DecodedJWT jwt = verifier.verify(token);
 
             if (jwt.getExpiresAt().before(new Date())) {
-                throw new JWTVerificationException("Token expirado");
+                throw new JWTVerificationException("Token expired");
             }
 
             List<String> roles = jwt.getClaim("roles").asList(String.class);
             if (!roles.contains("company")) {
-                throw new JWTVerificationException("Token não possui permissão de empresa");
+                throw new JWTVerificationException("Token does not have company permission");
             }
 
             return jwt;
         } catch (JWTVerificationException exception) {
-            throw new JWTVerificationException("Token inválido: " + exception.getMessage());
+            throw new JWTVerificationException("Invalid token: " + exception.getMessage());
         }
     }
 

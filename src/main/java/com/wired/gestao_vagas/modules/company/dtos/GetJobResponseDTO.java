@@ -27,7 +27,7 @@ public class GetJobResponseDTO {
     @Schema(description = "Salary of the job", example = "10000.00")
     private BigDecimal salary;
 
-    @Schema(description = "Description of the job", example = "A Wired é uma empresa de tecnologia que desenvolve soluções para o mercado")
+    @Schema(description = "Description of the job", example = "A Wired is a technology company that develops solutions for the market")
     private String description;
 
     @Schema(description = "Company ID", example = "3fa85f64-5717-4562-b3fc-2c963f66afa6")

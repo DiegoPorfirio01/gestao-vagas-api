@@ -10,12 +10,12 @@ import lombok.Data;
 @AllArgsConstructor
 @Schema(description = "Body of the company authentication")
 public class AuthCompanyBodyDTO {
-    @Email(message = "Email inválido")
-    @NotBlank(message = "Email é obrigatório")
-    @Schema(description = "Email of the company", example = "wired@gmail.com")
+    @Email(message = "Invalid email")
+    @NotBlank(message = "Email is required")
+    @Schema(description = "Company email", example = "wired@gmail.com")
     private String email;
 
-    @NotBlank(message = "Senha é obrigatória")
-    @Schema(description = "Password of the company", example = "12345678")
+    @NotBlank(message = "Password is required")
+    @Schema(description = "Company password", example = "12345678")
     private String password;
 }
