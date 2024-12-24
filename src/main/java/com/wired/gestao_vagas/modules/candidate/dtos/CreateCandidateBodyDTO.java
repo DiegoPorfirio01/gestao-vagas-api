@@ -11,7 +11,7 @@ import jakarta.validation.constraints.Pattern;
 public record CreateCandidateBodyDTO(
                 @Schema(description = "Candidate name", example = "John Doe") @NotBlank(message = "Name is required") @Length(min = 3, max = 255, message = "Name must be between 3 and 255 characters") String name,
 
-                @Schema(description = "Candidate username", example = "john_doe") @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Username must contain only letters and numbers and cannot contain spaces") @NotBlank(message = "Username is required") @Length(min = 3, max = 20, message = "Username must be between 3 and 20 characters") String username,
+                @Schema(description = "Candidate username", example = "johndoe") @Pattern(regexp = "^[a-zA-Z0-9]+$", message = "Username must contain only letters and numbers and cannot contain spaces") @NotBlank(message = "Username is required") @Length(min = 3, max = 20, message = "Username must be between 3 and 20 characters") String username,
 
                 @Schema(description = "Candidate email", example = "john.doe@example.com") @Email(message = "Invalid email") @NotBlank(message = "Email is required") String email,
 
