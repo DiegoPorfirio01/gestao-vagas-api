@@ -15,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,7 +25,9 @@ import lombok.NoArgsConstructor;
 import com.wired.gestao_vagas.modules.company.entities.JobEntity;
 
 @Entity
-@Table(name = "apply_jobs")
+@Table(name = "apply_jobs", uniqueConstraints = {
+        @UniqueConstraint(columnNames = { "candidate_id", "job_id" })
+})
 @Data
 @Builder
 @AllArgsConstructor
