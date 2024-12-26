@@ -53,7 +53,8 @@ public class CompanyController {
         @ApiResponses({
                         @ApiResponse(responseCode = "200", description = "Success", content = @Content(mediaType = "application/json", schema = @Schema(implementation = GetCurrentCompanyResponseDTO.class))),
                         @ApiResponse(responseCode = "404", description = "Company not found", content = @Content(schema = @Schema())),
-                        @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema()))
+                        @ApiResponse(responseCode = "401", description = "Unauthorized", content = @Content(schema = @Schema())),
+                        @ApiResponse(responseCode = "403", description = "Forbidden", content = @Content(schema = @Schema()))
         })
         public ResponseEntity<GetCurrentCompanyResponseDTO> getCurrentCompany(HttpServletRequest request) {
                 UUID companyId = UUID.fromString(request.getAttribute("company_id").toString());
