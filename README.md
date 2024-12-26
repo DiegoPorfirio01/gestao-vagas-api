@@ -30,6 +30,30 @@ Before you begin, ensure you have:
 - Docker and Docker Compose
 - PostgreSQL
 
+
+## 🚀 Running the application
+
+This will start:
+- PostgreSQL database (port 5432)
+- SonarQube (port 9000)
+
+2. Access SonarQube:
+- URL: http://localhost:9000
+- Default credentials: 
+  - Username: admin
+  - Password: admin
+
+3. Run SonarQube analysis:
+```bash
+mvn clean verify sonar:sonar \
+  mvn clean verify sonar:sonar \                                                                                 
+  -Dsonar.projectKey=gestao_vagas \
+  -Dsonar.host.url=http://localhost:9000 \
+  -Dsonar.login=your_sonar_token
+```
+
+obs: a sonar key é criada ao logar no sonarqube
+
 ## 🛠️ Installation
 
 1. Clone the repository

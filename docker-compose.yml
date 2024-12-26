@@ -1,3 +1,12 @@
+networks:
+  gestao_vagas_network:
+    driver: bridge
+
+volumes:
+  prometheus_data:
+    external: false
+    name: prometheus_data
+
 services:
   postgres:
     container_name: gestao_vagas_postgres
@@ -8,3 +17,34 @@ services:
       - POSTGRES_USER=admin
       - POSTGRES_PASSWORD=admin
       - POSTGRES_DB=gestao_vagas
+
+  sonarqube:
+    container_name: sonarqube
+    image: sonarqube:9.9.0-community
+    ports:
+      - 9000:9000
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+
+  prometheus:
+    container_name: prometheus
+    image: prom/prometheus:latest
+    ports:
+      - 9090:9090
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    networks:
+      - gestao_vagas_network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  grafana:
+    container_name: grafana
+    image: grafana/grafana:latest
+    ports:
+      - 3000:3000
+    networks:
+      - gestao_vagas_network
+    depends_on:
+      - prometheus

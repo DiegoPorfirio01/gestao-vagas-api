@@ -43,6 +43,7 @@ public class SecurityConfig {
                             .requestMatchers(HttpMethod.POST, "/companies").permitAll()
                             .requestMatchers(HttpMethod.GET, "/jobs").permitAll()
                             .requestMatchers(HttpMethod.GET, SwaggerMatchers).permitAll()
+                            .requestMatchers("/actuator/**").permitAll()
                             .anyRequest().authenticated();
                 }).addFilterBefore(securityFilterCompany, BasicAuthenticationFilter.class)
                 .addFilterBefore(securityFilterCandidate, BasicAuthenticationFilter.class);
