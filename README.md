@@ -214,6 +214,74 @@ POSTGRES_PASSWORD=admin
 POSTGRES_DB=gestao_vagas
 ```
 
+## 🤝 CI/CD Pipeline
+
+This project implements a robust CI/CD pipeline using GitHub Actions and Docker for automated building, testing, and deployment.
+
+### Pipeline Features
+
+- Automated builds on push to main branch
+- Docker image creation and publishing
+- Automated deployment to production
+- Environment-specific configurations
+- Continuous integration with test execution
+
+### Workflow Structure
+
+```yaml
+name: Gestao de Vagas Application
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - Checkout code
+      - Setup Java 21
+      - Build project with Maven
+      - Login to Docker Hub
+      - Build and publish Docker image
+  
+  deploy:
+    needs: build
+    runs-on: self-hosted
+    steps:
+      - Pull latest Docker image
+      - Deploy container with environment variables
+```
+
+### Docker Configuration
+
+The application is containerized using Docker for consistent deployment across environments:
+
+```dockerfile
+FROM openjdk:21-jdk-slim
+COPY target/*.jar app.jar
+ENTRYPOINT ["java","-jar","/app.jar"]
+```
+
+### Environment Variables
+
+The following environment variables are required for deployment:
+
+- `DATABASE_URL`: Database connection URL
+- `DATABASE_USERNAME`: Database username
+- `DATABASE_PASSWORD`: Database password
+- `DATABASE_NAME`: Database name
+- `DOCKER_USERNAME`: Docker Hub username
+- `DOCKER_PASSWORD`: Docker Hub password
+
+### Deployment Process
+
+1. The pipeline is triggered on push to the main branch
+2. Maven builds and tests the application
+3. Docker image is built and pushed to Docker Hub
+4. The application is deployed to production server
+5. Environment variables are injected during container startup
+
 ## 🤝 Contributing
 
 Feel free to contribute to this project. Any contributions you make are greatly appreciated.
