@@ -28,11 +28,25 @@ jobs:
         needs: build
         runs-on: self-hosted
         steps:
-            - name: Pull image docker hub 
-              run: docker pull ${{secrets.DOCKER_USERNAME}}/gestao_vagas:latest
-            - name:  remove container
-              run: docker rm -f gestao-vagas
+            - name: Remove container
+              run: docker rm -f gestao-vagas || true
+            
             - name: Run docker container gestao-vagas
-              run: docker run -d -p 8080:8080 -e DATABASE_URL=${{secrets.DATABASE_URL}} -e DATABASE_PASSWORD='${{secrets.DATABASE_PASSWORD}}' -e DATABASE_USERNAME=${{secrets.DATABASE_USERNAME}} -e DATABASE_NAME=${{secrets.DATABASE_NAME}} --name gestao-vagas ${{secrets.DOCKER_USERNAME}}/gestao_vagas
+              run: |
+                docker run -d -p 8080:8080 \
+                  -e DATABASE_URL='jdbc:postgresql://${{secrets.DB_HOST}}/${{secrets.DB_NAME}}' \
+                  -e DATABASE_PASSWORD='${{secrets.DB_PASSWORD}}' \
+                  -e DATABASE_USERNAME='${{secrets.DB_USERNAME}}' \
+                  -e DATABASE_NAME='${{secrets.DB_NAME}}' \
+                  -e SPRING_DATASOURCE_SSL_MODE='require' \
+                  --name gestao-vagas \
+                  ${{secrets.DOCKER_USERNAME}}/gestao_vagas
+            
+            - name: Check container status
+              run: |
+                echo "Waiting for application to start..."
+                sleep 15
+                echo "Docker logs:"
+                docker logs gestao-vagas
               
     
