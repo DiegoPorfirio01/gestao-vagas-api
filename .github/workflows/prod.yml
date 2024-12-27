@@ -24,15 +24,15 @@ jobs:
               run: docker build -t ${{secrets.DOCKER_USERNAME}}/gestao_vagas .
             - name: Publish image
               run: docker push ${{secrets.DOCKER_USERNAME}}/gestao_vagas
-    # deploy:
-    #     needs: build
-    #     runs-on: self-hosted
-    #     steps:
-    #         - name: Pull image docker hub 
-    #           run: docker pull www/gestao_vagas:latest
-    #         - name:  remove container
-    #           run: docker rm -f gestao-vagas
-    #         - name: Run docker container gestao-vagas
-    #           run: docker run -d -p 8080:8080 -e DATABASE_URL=${{secrets.DATABASE_URL}} -e DATABASE_PASSWORD='${{secrets.DATABASE_PASSWORD}}' -e DATABASE_USERNAME=${{secrets.DATABASE_USERNAME}} -e DATABASE_NAME=${{secrets.DATABASE_NAME}} --name gestao-vagas ${{secrets.DOCKER_USERNAME}}/gestao_vagas
+    deploy:
+        needs: build
+        runs-on: self-hosted
+        steps:
+            - name: Pull image docker hub 
+              run: docker pull ${{secrets.DOCKER_USERNAME}}/gestao_vagas:latest
+            - name:  remove container
+              run: docker rm -f gestao-vagas
+            - name: Run docker container gestao-vagas
+              run: docker run -d -p 8080:8080 -e DATABASE_URL=${{secrets.DATABASE_URL}} -e DATABASE_PASSWORD='${{secrets.DATABASE_PASSWORD}}' -e DATABASE_USERNAME=${{secrets.DATABASE_USERNAME}} -e DATABASE_NAME=neondb${{secrets.DATABASE_NAME}} --name gestao-vagas ${{secrets.DOCKER_USERNAME}}/gestao_vagas
               
     
