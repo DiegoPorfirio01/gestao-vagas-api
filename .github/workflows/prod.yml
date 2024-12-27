@@ -34,19 +34,15 @@ jobs:
             - name: Run docker container gestao-vagas
               run: |
                 docker run -d -p 8080:8080 \
-                  -e DATABASE_URL='jdbc:postgresql://${{secrets.DB_HOST}}/${{secrets.DB_NAME}}' \
-                  -e DATABASE_PASSWORD='${{secrets.DB_PASSWORD}}' \
-                  -e DATABASE_USERNAME='${{secrets.DB_USERNAME}}' \
-                  -e DATABASE_NAME='${{secrets.DB_NAME}}' \
-                  -e SPRING_DATASOURCE_SSL_MODE='require' \
+                  -e DATABASE_URL="${secrets.DATABASE_URL}" \
+                  -e DATABASE_USERNAME="${secrets.DATABASE_USERNAME}" \
+                  -e DATABASE_PASSWORD="${secrets.DATABASE_PASSWORD}" \
+                  -e SPRING_DATASOURCE_SSL_MODE="require" \
                   --name gestao-vagas \
                   ${{secrets.DOCKER_USERNAME}}/gestao_vagas
-            
-            - name: Check container status
-              run: |
-                echo "Waiting for application to start..."
-                sleep 15
-                echo "Docker logs:"
+                
+                # Wait for container to start and show logs
+                sleep 10
                 docker logs gestao-vagas
               
     
