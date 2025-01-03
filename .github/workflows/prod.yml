@@ -1,4 +1,6 @@
-name: Gestao de Vagas Application - Prod
+name: Gestao de Vagas Application
+
+
 on:
     push:
         branches: [main]
@@ -30,7 +32,7 @@ jobs:
             
             - name: Run docker container gestao-vagas
               run: |
-                docker run -d -p 8888:8888 \
+                docker run -d -p 8888:8080 \
                   -e SPRING_DATASOURCE_URL="jdbc:postgresql://ep-bitter-violet-a5pz1kz5-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require" \
                   -e SPRING_DATASOURCE_PASSWORD="${{secrets.DATABASE_PASSWORD}}" \
                   -e SPRING_DATASOURCE_USERNAME="${{secrets.DATABASE_USERNAME}}" \
