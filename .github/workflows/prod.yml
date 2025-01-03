@@ -1,4 +1,4 @@
-name: Gestao de Vagas Application
+name: Gestao de Vagas Application - Prod
 on:
     push:
         branches: [main]
